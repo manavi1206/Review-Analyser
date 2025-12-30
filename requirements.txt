@@ -1,0 +1,22 @@
+# Web Scraping
+google-play-scraper==1.2.7
+app-store-scraper==0.3.5
+beautifulsoup4==4.12.3
+
+# Data Processing
+pandas==2.2.0
+numpy==1.26.3
+
+# LLM Integration
+google-generativeai==0.3.2
+
+# Email
+secure-smtplib==0.1.1
+
+# Report Generation
+markdown==3.5.2
+reportlab==4.0.9
+python-dateutil==2.8.2
+
+# Environment Variables
+python-dotenv==1.0.1

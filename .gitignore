@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Data files (keep structure, ignore content)
+data/raw/*.csv
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Reports (optional - remove these lines if you want to commit reports)
+# reports/*.pdf
+# reports/*.md
+# !reports/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test files
+test_*.py
+check_*.py
+
+# Logs
+*.log
