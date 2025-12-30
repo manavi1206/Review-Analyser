@@ -1,225 +1,275 @@
 # 📊 Groww App Review Insights Analyzer
 
-A comprehensive Python-based tool that analyzes app reviews from Google Play Store and Apple App Store, extracts key insights using Gemini AI, and generates weekly reports sent via email.
+An AI-powered review analysis system that automatically scrapes, analyzes, and delivers executive-level insights from app store reviews via beautifully designed email reports.
 
-## 🎯 Features
+## ✨ Features
 
-- **Automated Review Scraping**: Collects reviews from both Android and iOS platforms
-- **AI-Powered Analysis**: Uses Google Gemini to extract themes, quotes, and recommendations
-- **Professional Reports**: Generates both Markdown and PDF reports
-- **Email Automation**: Sends weekly insights directly to your inbox
-- **Privacy-First**: Automatically removes PII from all outputs
-
-## 📋 Prerequisites
-
-- Python 3.8 or higher
-- Google Gemini API key
-- Gmail account with App Password enabled
+- **🤖 Automated Review Scraping** - Collects reviews from Google Play Store & Apple App Store
+- **🧠 AI-Powered Analysis** - Uses Google Gemini 2.5 Flash for executive-level insights
+- **📧 Dashboard-Style Emails** - Professional, visual reports with metrics, charts, and recommendations
+- **⚡ GitHub Actions Automation** - Runs weekly on Monday mornings automatically
+- **🔒 Privacy-First** - Removes all PII from outputs
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### 1. Clone & Install
 
 ```bash
+git clone https://github.com/manavi1206/Review-Analyser.git
+cd Review\ Analyser
 pip install -r requirements.txt
 ```
 
-### 2. Configure Environment Variables
-
-Copy the example environment file and fill in your credentials:
+### 2. Configure Environment
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` and add:
+Edit `.env` with your credentials:
 
 ```env
-# Gemini API Configuration
+# Required: Gemini API Key
 GEMINI_API_KEY=your_gemini_api_key_here
 
-# Gmail Configuration
+# Required: Gmail Credentials
 GMAIL_ADDRESS=your_email@gmail.com
 GMAIL_APP_PASSWORD=your_16_char_app_password
 
-# App Configuration (default values for Groww)
+# App IDs (Groww defaults)
 GROWW_ANDROID_APP_ID=com.nextbillion.groww
-GROWW_IOS_APP_ID=1404871631
+GROWW_IOS_APP_ID=1404871703
 
-# Report Settings
+# Analysis Settings
 WEEKS_TO_ANALYZE=10
-MAX_THEMES=5
-REPORT_WORD_LIMIT=250
 ```
 
-### 3. Get Your API Keys
+### 3. Get API Keys
 
-#### Gemini API Key:
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create a new API key
-3. Copy and paste into `.env`
+**Gemini API Key:**
+1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create API key → Copy to `.env`
 
-#### Gmail App Password:
-1. Enable 2-factor authentication on your Google account
-2. Go to [App Passwords](https://myaccount.google.com/apppasswords)
-3. Generate a new app password for "Mail"
-4. Copy the 16-character password into `.env`
+**Gmail App Password:**
+1. Enable [2FA on Google Account](https://myaccount.google.com/security)
+2. Generate [App Password](https://myaccount.google.com/apppasswords)
+3. Copy 16-char password to `.env`
 
-### 4. Run the Analyzer
+### 4. Run Analysis
 
 ```bash
-python main.py
+python3 main.py
 ```
 
 This will:
-1. ✅ Scrape reviews from Play Store and App Store
-2. ✅ Analyze reviews with Gemini AI
-3. ✅ Generate markdown and PDF reports
-4. ✅ Send email with insights
+1. ✅ Scrape ~7,000+ reviews (Android + iOS)
+2. ✅ Analyze with Gemini AI
+3. ✅ Generate Markdown & PDF reports
+4. ✅ Send dashboard email with insights
+
+## 📧 Email Report Features
+
+The automated email includes:
+
+### **Health Snapshot**
+- 4-column metric grid: Total Reviews, Avg Rating, Positive %, Themes Count
+- Visual icons and clean typography
+
+### **Platform & Sentiment Distribution**
+- Side-by-side cards with progress bars
+- Android vs iOS breakdown
+- Positive/Neutral/Negative sentiment visualization
+
+### **Top Themes**
+- Ranked by volume with percentages
+- Severity badges (High/Medium/Low)
+- Business risk categories (Trust, Revenue, Experience, Onboarding)
+
+### **User Feedback**
+- 4 verbatim quotes in 2x2 grid
+- Theme and user segment tags
+
+### **Recommended Actions**
+- Priority-tagged (P0/P1/P2) with color coding
+- Expected impact statements
+- Green arrow indicators
+
+### **Dynamic Subject Line**
+```
+Groww App Review Insights: 68% Positive, KYC Verification Delays Top Concern (Oct 22 - Dec 30)
+```
+
+## 🤖 GitHub Actions Automation
+
+### Setup (One-Time)
+
+1. Go to your GitHub repo → **Settings** → **Secrets and variables** → **Actions**
+
+2. Add these secrets:
+   - `GEMINI_API_KEY` - Your Gemini API key
+   - `GMAIL_ADDRESS` - Your Gmail address
+   - `GMAIL_APP_PASSWORD` - Your Gmail app password
+
+3. The workflow runs automatically **every Monday at 9:00 AM IST**
+
+### Manual Trigger
+
+Go to **Actions** tab → **Weekly Review Analysis** → **Run workflow**
 
 ## 📁 Project Structure
 
 ```
 Review Analyser/
-├── main.py                 # Main orchestrator script
-├── requirements.txt        # Python dependencies
-├── .env                    # Environment variables (create from .env.example)
-├── .env.example           # Environment template
+├── main.py                          # Main orchestrator
+├── send_test_email.py               # Test email with sample data
+├── requirements.txt                 # Python dependencies
+├── .env                             # Your credentials (not in git)
+├── .env.example                     # Template
+├── .github/workflows/
+│   └── weekly-analysis.yml          # GitHub Actions automation
 ├── src/
-│   ├── scraper.py         # Review scraping logic
-│   ├── analyzer.py        # Gemini AI analysis
-│   ├── report_generator.py # Report creation
-│   └── email_mailer.py    # Email sending
+│   ├── scraper.py                   # Review scraping (Android + iOS)
+│   ├── analyzer_executive.py        # Executive-level AI analysis
+│   ├── report_generator_executive.py # Report generation
+│   └── email_mailer_visual.py       # Dashboard email design
 ├── data/
-│   ├── raw/               # Scraped reviews (CSV)
-│   └── processed/         # Processed data
-└── reports/               # Generated reports (MD & PDF)
+│   └── raw/                         # Scraped reviews (CSV)
+└── reports/                         # Generated reports (MD + PDF)
 ```
 
-## 🔄 How to Re-run for a New Week
+## 🎯 Executive Analysis Features
 
-Simply run the main script again:
+The AI analyzer provides:
 
-```bash
-python main.py
-```
+- **Executive Summary** - 5 key bullet points for leadership
+- **Theme Segmentation** - Severity (High/Medium/Low) + Business Risk classification
+- **High-Impact Insights** - Deep dives into critical issues with user quotes
+- **Rating Correlation** - What drives positive vs negative ratings
+- **Positive Signals** - What users love about the app
+- **Decision-Oriented Recommendations** - P0/P1/P2 prioritized actions
+- **Leadership Decisions Required** - Strategic choices needed
 
-The tool automatically:
-- Fetches the latest reviews from the past N weeks (configured in `.env`)
-- Generates a new timestamped report
-- Sends a fresh email with updated insights
-
-## 🏷️ Theme Legend
-
-The analyzer identifies up to 5 themes from reviews. Common themes for Groww include:
-
-| Theme | Description |
-|-------|-------------|
-| **KYC & Verification** | Account setup, document verification, approval delays |
-| **Payment Issues** | Deposits, withdrawals, transaction failures |
-| **App Performance** | Crashes, bugs, slow loading, UI glitches |
-| **Customer Support** | Response time, helpfulness, issue resolution |
-| **Feature Requests** | New features, improvements, missing functionality |
-| **User Experience** | Navigation, design, ease of use |
-
-## 📊 Sample Output
-
-### Weekly Report Includes:
-- **Top 3 Themes**: Most discussed topics with percentages
-- **3 User Quotes**: Real feedback from users (anonymized)
-- **3 Action Items**: Specific, actionable recommendations
-
-### Example:
-
-```
-📊 Groww App Weekly Review Insights
-
-Report Period: 2024-10-21 to 2024-12-30
-Total Reviews Analyzed: 247
-Average Rating: 3.9/5 ⭐
-
-🔍 Top 3 Themes
-1. KYC Issues (35%) - Users facing delays in verification
-2. Payment Problems (28%) - Withdrawal and deposit issues
-3. App Performance (22%) - Crashes and slow loading
-
-💬 User Voices
-1. 😞 "KYC verification taking too long, been waiting for 3 days"
-2. 😊 "Great app for beginners, easy to understand"
-3. 😞 "Withdrawal stuck, customer support not responding"
-
-💡 Recommended Actions
-1. Implement automated KYC verification to reduce processing time
-2. Add real-time withdrawal tracking dashboard
-3. Optimize app performance with caching and lazy loading
-```
-
-## 🛠️ Customization
+## 🔧 Customization
 
 ### Change Analysis Period
 
-Edit `.env`:
 ```env
-WEEKS_TO_ANALYZE=12  # Analyze last 12 weeks instead of 10
-```
-
-### Adjust Number of Themes
-
-Edit `.env`:
-```env
-MAX_THEMES=3  # Extract only top 3 themes
+WEEKS_TO_ANALYZE=12  # Analyze last 12 weeks
 ```
 
 ### Analyze Different App
 
-Edit `.env` with new app IDs:
 ```env
 GROWW_ANDROID_APP_ID=com.example.app
 GROWW_IOS_APP_ID=123456789
 ```
 
+### Test Email Design
+
+```bash
+python3 send_test_email.py
+```
+
+Sends a test email with sample data to verify design.
+
+## ⚠️ Important: iOS App ID
+
+**Critical:** The iOS App ID must be correct for iOS reviews to work.
+
+For Groww app, use:
+```env
+GROWW_IOS_APP_ID=1404871703
+```
+
+**Not:** `1404871631` (incorrect ID)
+
 ## 🐛 Troubleshooting
 
-### "No reviews collected"
-- Check if the app IDs are correct
-- Verify internet connection
-- Some apps may have limited public reviews
+### No iOS Reviews Collected
+- Verify `GROWW_IOS_APP_ID=1404871703` in `.env`
+- Check internet connection
 
-### "GEMINI_API_KEY not found"
-- Ensure `.env` file exists in the project root
-- Check that the API key is correctly formatted
-- Verify the API key is active in Google AI Studio
+### Email Not Sending
+- Use Gmail **App Password**, not regular password
+- Enable 2FA first
+- Verify `GMAIL_ADDRESS` and `GMAIL_APP_PASSWORD` in `.env`
 
-### "Error sending email"
-- Use an App Password, not your regular Gmail password
-- Enable 2-factor authentication first
-- Check that the email address is correct
+### Gemini API Errors
+- Check API key is valid at [Google AI Studio](https://makersuite.google.com/app/apikey)
+- Verify `GEMINI_API_KEY` in `.env`
 
-## 📦 Deliverables Checklist
+### GitHub Actions Not Running
+- Add all 3 secrets in repo settings
+- Check workflow file is in `.github/workflows/`
+- Verify workflow is enabled in Actions tab
 
-- ✅ Working prototype (this repository)
-- ✅ Latest one-page weekly note (generated in `reports/`)
-- ✅ Email draft (sent to configured Gmail address)
-- ✅ Reviews CSV (saved in `data/raw/`)
-- ✅ README with re-run instructions
+## 📊 Sample Output
+
+### Email Subject
+```
+Groww App Review Insights: 68% Positive, KYC Verification Delays Top Concern (Oct 22 - Dec 30)
+```
+
+### Key Metrics
+- **Total Reviews:** 7,178
+- **Average Rating:** 4.12/5
+- **Positive Sentiment:** 68%
+- **Themes Identified:** 5
+
+### Top Theme Example
+```
+#1 KYC Verification Delays (30%)
+Users experiencing long wait times for account verification, some waiting 3-5 days
+[High] [Trust]
+~2,153 reviews
+```
+
+### Recommendation Example
+```
+[P0] Implement automated KYC verification using AI/ML document verification
+→ Reduce verification time from days to hours, improving onboarding conversion by estimated 25%
+```
 
 ## 🔒 Privacy & Security
 
-- **No PII**: All usernames, emails, and personal identifiers are removed
-- **Local Processing**: Reviews are processed locally
-- **Secure Credentials**: API keys stored in `.env` (not committed to git)
+- **No PII** - All usernames and personal data removed
+- **Local Processing** - Reviews analyzed locally
+- **Secure Credentials** - API keys in `.env` (gitignored)
+- **GitHub Secrets** - Encrypted storage for automation
 
-## 📝 License
+## 📦 Dependencies
 
-This project is for educational and internal use as part of Milestone 2 requirements.
+- `google-generativeai` - Gemini AI API
+- `google-play-scraper` - Android review scraping
+- `reportlab` - PDF generation
+- `python-dotenv` - Environment management
 
-## 🤝 Support
+See `requirements.txt` for full list.
 
-For issues or questions:
-1. Check the troubleshooting section
-2. Verify all environment variables are set correctly
-3. Ensure all dependencies are installed
+## 🎓 How It Works
+
+1. **Scraping** - Fetches reviews from both app stores for the past N weeks
+2. **Analysis** - Gemini AI extracts themes, quotes, and recommendations
+3. **Report Generation** - Creates Markdown and PDF reports
+4. **Email Delivery** - Sends dashboard-style email with all insights
+5. **Automation** - GitHub Actions runs weekly on schedule
+
+## 📝 Files Generated
+
+Each run creates:
+- `data/raw/reviews_YYYYMMDD.csv` - Raw scraped reviews
+- `reports/executive_report_YYYYMMDD.md` - Markdown report
+- `reports/executive_report_YYYYMMDD.pdf` - PDF report
+- Email sent to configured address
+
+## 🚀 Production Ready
+
+- ✅ Automated weekly execution
+- ✅ Professional email design
+- ✅ Executive-level insights
+- ✅ Complete error handling
+- ✅ Privacy compliance
 
 ---
 
-**Built with ❤️ for Milestone 2 — App Review Insights Analyzer**
+**Built for executive stakeholders who need actionable insights from app reviews** 📊✨
