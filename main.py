@@ -13,8 +13,8 @@ from dotenv import load_dotenv
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from scraper import ReviewScraper
-from analyzer import ReviewAnalyzer
-from report_generator import ReportGenerator
+from analyzer_executive import ExecutiveReviewAnalyzer
+from report_generator_executive import ExecutiveReportGenerator
 from email_mailer import EmailMailer
 
 
@@ -50,14 +50,14 @@ def main():
         print("\n" + "="*70)
         print("🧠 STEP 2: Analyzing Reviews with Gemini AI")
         print("-" * 70)
-        analyzer = ReviewAnalyzer(max_themes=max_themes)
+        analyzer = ExecutiveReviewAnalyzer()
         analysis_results = analyzer.analyze_reviews(reviews_df)
         
         # Step 3: Generate Reports
         print("\n" + "="*70)
         print("📄 STEP 3: Generating Reports")
         print("-" * 70)
-        generator = ReportGenerator()
+        generator = ExecutiveReportGenerator()
         
         # Generate both markdown and PDF
         md_path = generator.generate_markdown(analysis_results)
