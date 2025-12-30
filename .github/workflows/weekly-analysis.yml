@@ -54,12 +54,14 @@ jobs:
             data/raw/*.csv
           retention-days: 90
       
-      - name: Commit and push reports (optional)
-        if: success()
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add reports/*.md reports/*.pdf
-          git diff --quiet && git diff --staged --quiet || git commit -m "📊 Weekly review analysis - $(date +'%Y-%m-%d')"
-          git push
-        continue-on-error: true
+      # Reports are available via email and GitHub artifacts
+      # Uncomment below to auto-commit reports (requires write permissions)
+      # - name: Commit and push reports (optional)
+      #   if: success()
+      #   run: |
+      #     git config --local user.email "github-actions[bot]@users.noreply.github.com"
+      #     git config --local user.name "github-actions[bot]"
+      #     git add reports/*.md reports/*.pdf
+      #     git diff --quiet && git diff --staged --quiet || git commit -m "📊 Weekly review analysis - $(date +'%Y-%m-%d')"
+      #     git push
+      #   continue-on-error: true
