@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 from scraper import ReviewScraper
 from analyzer_executive import ExecutiveReviewAnalyzer
 from report_generator_executive import ExecutiveReportGenerator
-from email_mailer_visual import VisualEmailMailer
+from email_mailer_visual import ExecutiveEmailMailer
 
 
 def main():
@@ -68,7 +68,7 @@ def main():
         print("📧 STEP 4: Sending Email Report")
         print("-" * 70)
         
-        mailer = VisualEmailMailer()
+        mailer = ExecutiveEmailMailer()
         email_sent = mailer.send_weekly_report(
             analysis=analysis_results,
             report_paths=[md_path, pdf_path]
