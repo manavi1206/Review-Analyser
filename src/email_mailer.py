@@ -76,48 +76,95 @@ class EmailMailer:
     
     def _create_subject(self, analysis: Dict) -> str:
         """Create email subject line"""
-        date_end = analysis['date_range']['end']
-        avg_rating = analysis['avg_rating']
+        # Handle both old and new analyzer formats
+        if 'metadata' in analysis:
+            # New executive analyzer format
+            date_end = analysis['metadata']['date_range']['end']
+            avg_rating = analysis['metadata']['avg_rating']
+        else:
+            # Old analyzer format (fallback)
+            date_end = analysis.get('date_range', {}).get('end', datetime.now().strftime('%Y-%m-%d'))
+            avg_rating = analysis.get('avg_rating', 0)
+        
         return f"📊 Groww App Weekly Insights — {date_end} (Avg Rating: {avg_rating}/5)"
     
     def _create_email_body(self, analysis: Dict) -> str:
         """Create HTML email body"""
         
-        date_range = f"{analysis['date_range']['start']} to {analysis['date_range']['end']}"
+        # Handle both old and new analyzer formats
+        if 'metadata' in analysis:
+            # New executive analyzer format
+            meta = analysis['metadata']
+            date_range = f"{meta['date_range']['start']} to {meta['date_range']['end']}"
+            total_reviews = meta['total_reviews']
+            avg_rating = meta['avg_rating']
+            themes = analysis.get('themes', [])
+            quotes = analysis.get('deep_dives', [])  # Executive format uses deep_dives
+            actions = analysis.get('recommendations', [])
+        else:
+            # Old analyzer format (fallback)
+            date_range = f"{analysis.get('date_range', {}).get('start', 'N/A')} to {analysis.get('date_range', {}).get('end', 'N/A')}"
+            total_reviews = analysis.get('total_reviews', 0)
+            avg_rating = analysis.get('avg_rating', 0)
+            themes = analysis.get('themes', [])
+            quotes = analysis.get('quotes', [])
+            actions = analysis.get('actions', [])
         
         # Build themes HTML
         themes_html = ""
-        for i, theme in enumerate(analysis['themes'][:3], 1):
+        for i, theme in enumerate(themes[:3], 1):
+            severity = theme.get('severity', 'N/A')
+            risk = theme.get('business_risk', 'N/A')
             themes_html += f"""
             <tr>
                 <td style="padding: 10px; border-bottom: 1px solid #eee;">
                     <strong>{i}. {theme['theme']}</strong> ({theme['percentage']}%)<br/>
                     <span style="color: #666;">{theme['description']}</span><br/>
-                    <em style="color: #999; font-size: 12px;">~{theme['review_count']} reviews</em>
+                    <em style="color: #999; font-size: 12px;">~{theme['review_count']} reviews | Severity: {severity} | Risk: {risk}</em>
                 </td>
             </tr>
             """
         
-        # Build quotes HTML
+        
+        # Build quotes HTML (handle both formats)
         quotes_html = ""
-        for i, quote in enumerate(analysis['quotes'], 1):
-            sentiment_emoji = "😊" if quote['sentiment'] == 'positive' else "😞" if quote['sentiment'] == 'negative' else "😐"
+        for i, quote_data in enumerate(quotes[:3], 1):
+            if 'quote' in quote_data:
+                # Old format
+                sentiment_emoji = "😊" if quote_data.get('sentiment') == 'positive' else "😞" if quote_data.get('sentiment') == 'negative' else "😐"
+                quote_text = quote_data['quote']
+                theme_name = quote_data.get('theme', 'N/A')
+            else:
+                # New executive format (deep_dives)
+                sentiment_emoji = "💡"
+                quote_text = quote_data.get('quote', 'N/A')
+                theme_name = quote_data.get('theme', 'N/A')
+            
             quotes_html += f"""
             <tr>
                 <td style="padding: 10px; border-bottom: 1px solid #eee;">
-                    {sentiment_emoji} <em>"{quote['quote']}"</em><br/>
-                    <span style="color: #999; font-size: 12px;">— Related to: {quote['theme']}</span>
+                    {sentiment_emoji} <em>"{quote_text}"</em><br/>
+                    <span style="color: #999; font-size: 12px;">— Related to: {theme_name}</span>
                 </td>
             </tr>
             """
         
-        # Build actions HTML
+        
+        # Build actions HTML (handle both formats)
         actions_html = ""
-        for i, action in enumerate(analysis['actions'], 1):
+        for i, action_data in enumerate(actions[:3], 1):
+            if isinstance(action_data, str):
+                # Old format (simple string)
+                action_text = action_data
+            else:
+                # New executive format (dict with priority)
+                priority = action_data.get('priority', 'P2')
+                action_text = f"[{priority}] {action_data.get('action', 'N/A')}"
+            
             actions_html += f"""
             <tr>
                 <td style="padding: 10px; border-bottom: 1px solid #eee;">
-                    <strong>{i}.</strong> {action}
+                    <strong>{i}.</strong> {action_text}
                 </td>
             </tr>
             """
@@ -145,8 +192,8 @@ class EmailMailer:
                 
                 <div class="stats">
                     <strong>Report Period:</strong> {date_range}<br/>
-                    <strong>Total Reviews Analyzed:</strong> {analysis['total_reviews']}<br/>
-                    <strong>Average Rating:</strong> {analysis['avg_rating']}/5 ⭐
+                    <strong>Total Reviews Analyzed:</strong> {total_reviews}<br/>
+                    <strong>Average Rating:</strong> {avg_rating}/5 ⭐
                 </div>
                 
                 <div class="section">
