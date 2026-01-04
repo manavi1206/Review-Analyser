@@ -146,22 +146,18 @@ sample_analysis = {
     ]
 }
 
-# Report paths (use existing reports if available)
-report_paths = [
-    'reports/executive_report_20251231.md',
-    'reports/executive_report_20251231.pdf'
-]
+# Generate visual PDF report
+from report_generator_visual import VisualReportGenerator
 
-# Check if reports exist
-import os
-existing_reports = [p for p in report_paths if os.path.exists(p)]
+print("📊 Generating visual PDF report...")
+visual_generator = VisualReportGenerator()
+visual_pdf_path = 'reports/visual_report_test_email.pdf'
+os.makedirs('reports', exist_ok=True)
+visual_generator.generate_report(sample_analysis, visual_pdf_path)
+print(f"✅ Visual PDF generated: {visual_pdf_path}")
 
-if not existing_reports:
-    print("⚠️  No existing reports found. Using sample data only.")
-    report_paths = []
-else:
-    report_paths = existing_reports
-    print(f"✅ Found {len(existing_reports)} existing reports to attach")
+# Report paths
+report_paths = [visual_pdf_path]
 
 # Send test email
 print("\n" + "="*70)
@@ -181,12 +177,13 @@ try:
         print("="*70)
         print("\nCheck your inbox to see the new visual email design!")
         print("It includes:")
-        print("  • Pastel color scheme")
-        print("  • Platform split (Android vs iOS)")
-        print("  • Sentiment bar charts")
-        print("  • Severity badges")
-        print("  • Priority tags")
-        print("  • Executive summary")
+        print("  • Dashboard-style email body")
+        print("  • 4-column metric grid")
+        print("  • Platform & sentiment charts")
+        print("  • 4 user feedback quotes")
+        print("  • Priority-tagged recommendations")
+        print("\nAttached:")
+        print("  • Visual PDF report with charts (4 pages)")
         print("\n📧 Email sent to:", mailer.gmail_address)
     else:
         print("\n❌ Failed to send test email")
