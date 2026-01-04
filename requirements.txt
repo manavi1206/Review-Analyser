@@ -17,6 +17,7 @@ secure-smtplib==0.1.1
 markdown==3.5.2
 reportlab==4.0.9
 python-dateutil==2.8.2
+matplotlib==3.8.2
 
 # Environment Variables
 python-dotenv==1.0.1

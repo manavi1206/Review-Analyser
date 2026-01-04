@@ -15,7 +15,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 from scraper import ReviewScraper
 from analyzer_executive import ExecutiveReviewAnalyzer
 from report_generator_executive import ExecutiveReportGenerator
+from report_generator_visual import VisualReportGenerator
 from email_mailer_visual import ExecutiveEmailMailer
+
 
 
 def main():
@@ -57,11 +59,18 @@ def main():
         print("\n" + "="*70)
         print("📄 STEP 3: Generating Reports")
         print("-" * 70)
-        generator = ExecutiveReportGenerator()
         
-        # Generate both markdown and PDF
-        md_path = generator.generate_markdown(analysis_results)
-        pdf_path = generator.generate_pdf(analysis_results)
+        # Generate markdown report
+        text_generator = ExecutiveReportGenerator()
+        md_path = text_generator.generate_markdown(analysis_results)
+        
+        # Generate visual PDF report
+        visual_generator = VisualReportGenerator()
+        timestamp = datetime.now().strftime("%Y%m%d")
+        pdf_path = f"reports/visual_report_{timestamp}.pdf"
+        os.makedirs("reports", exist_ok=True)
+        visual_generator.generate_report(analysis_results, pdf_path)
+
         
         # Step 4: Send Email
         print("\n" + "="*70)
